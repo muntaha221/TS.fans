@@ -5,6 +5,7 @@ const songSchema = new mongoose.Schema({
   albumId: { type: mongoose.Schema.Types.ObjectId, ref: 'Album', required: true },
   duration: { type: String, required: true },
   likes: { type: Number, default: 0 },
+  previewUrl: { type: String },
   comments: [{
     username: { type: String, default: 'Anonymous Swiftie' },
     text: { type: String, required: true },

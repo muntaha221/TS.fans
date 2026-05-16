@@ -9,7 +9,9 @@ const AlbumCard = ({ album }) => {
           <img 
             src={album.coverImage || 'https://via.placeholder.com/400'} 
             alt={album.title}
+            loading="lazy"
             className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+            style={{ willChange: 'transform' }}
           />
           
           {/* Overlay on hover */}

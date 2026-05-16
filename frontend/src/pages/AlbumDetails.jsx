@@ -149,6 +149,8 @@ const AlbumDetails = () => {
                         index={index} 
                         onLikeUpdate={handleLikeUpdate} 
                         isPremium={true}
+                        albumCover={albumData.album.coverImage}
+                        albumTitle={albumData.album.title}
                       />
                     </div>
                   ))}

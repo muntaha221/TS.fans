@@ -32,6 +32,7 @@ app.use('/api/albums', require('./routes/albumRoutes'));
 app.use('/api/songs', require('./routes/songRoutes'));
 app.use('/api/fans', require('./routes/fanRoutes'));
 app.use('/api/scores', require('./routes/scoreRoutes'));
+app.use('/api/ai', require('./routes/aiRoutes'));
 
 // Socket.io for Live Chat
 io.on('connection', (socket) => {
@@ -65,6 +66,7 @@ const seedDatabase = async () => {
       const songsToInsert = data.songs.map(song => ({
         title: song.title,
         duration: song.duration,
+        previewUrl: song.previewUrl,
         albumId: album._id
       }));
       await Song.insertMany(songsToInsert);

@@ -28,11 +28,11 @@ const Navbar = () => {
       <div className="container mx-auto px-6 sm:px-10 lg:px-12">
         <div className="flex justify-between items-center h-24">
           <Link to="/" className="text-3xl font-black tracking-tighter hover:scale-105 transition-transform duration-500 flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center shadow-[0_0_20px_rgba(236,72,153,0.5)] group-hover:rotate-12 transition-transform">
-              <span className="text-white text-xl">TS</span>
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-[0_0_30px_rgba(59,130,246,0.5)] group-hover:rotate-12 transition-transform">
+              <span className="text-white text-2xl font-serif">S</span>
             </div>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400">
-              ERAS HUB
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-200 to-slate-400 font-black tracking-widest uppercase">
+              SWIFtAY
             </span>
           </Link>
           

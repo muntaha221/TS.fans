@@ -86,4 +86,32 @@ const addComment = async (req, res) => {
   }
 };
 
-module.exports = { getSongById, createSong, updateSong, deleteSong, likeSong, addComment };
+// @desc    Proxy fetch iTunes preview URL
+// @route   GET /api/songs/preview/fetch
+const getPreviewUrl = async (req, res) => {
+  try {
+    const { term } = req.query;
+    if (!term) return res.status(400).json({ message: 'Term is required' });
+
+    // Clean term to improve iTunes search hit rate (remove "From The Vault" and "feat.")
+    let cleanTerm = term.replace(/\(From The Vault\)/gi, '').replace(/\[From The Vault\]/gi, '').trim();
+    cleanTerm = cleanTerm.replace(/\(feat\.[^)]+\)/gi, '').trim();
+
+    const searchTerm = encodeURIComponent(cleanTerm);
+    const response = await fetch(`https://itunes.apple.com/search?term=${searchTerm}&entity=song&limit=1`, {
+      headers: { 'User-Agent': 'Mozilla/5.0' }
+    });
+    const data = await response.json();
+    
+    if (data.results && data.results.length > 0) {
+      res.json({ previewUrl: data.results[0].previewUrl });
+    } else {
+      res.status(404).json({ message: 'Preview not found' });
+    }
+  } catch (error) {
+    console.error('Proxy Fetch Error:', error);
+    res.status(500).json({ message: 'Failed to fetch preview' });
+  }
+};
+
+module.exports = { getSongById, createSong, updateSong, deleteSong, likeSong, addComment, getPreviewUrl };
