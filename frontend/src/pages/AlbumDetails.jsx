@@ -28,18 +28,19 @@ const AlbumDetails = () => {
     if (!loading && albumData) {
       gsap.from(".album-hero-content > *", {
         opacity: 0,
-        y: 30,
-        stagger: 0.1,
-        duration: 0.8,
-        ease: "power2.out"
+        y: 20,
+        stagger: 0.08,
+        duration: 0.5,
+        ease: "power2.out",
+        clearProps: "all"
       });
       gsap.from(".tracklist-item", {
         opacity: 0,
-        x: -20,
-        stagger: 0.05,
-        duration: 0.5,
+        x: -15,
+        stagger: 0.03,
+        duration: 0.4,
         ease: "power2.out",
-        delay: 0.4
+        clearProps: "all"
       });
     }
   }, [loading]);
@@ -151,6 +152,7 @@ const AlbumDetails = () => {
                         isPremium={true}
                         albumCover={albumData.album.coverImage}
                         albumTitle={albumData.album.title}
+                        playlist={songs}
                       />
                     </div>
                   ))}

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
 import toast from 'react-hot-toast';
-import LiveChat from '../components/LiveChat';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
@@ -13,7 +12,7 @@ const Community = () => {
 
   const eras = [
     "Taylor Swift (Debut)", "Fearless", "Speak Now", "Red", "1989", 
-    "reputation", "Lover", "folklore", "evermore", "Midnights", "The Tortured Poets Department"
+    "reputation", "Lover", "folklore", "evermore", "Midnights", "The Tortured Poets Department", "Life of a Showgirl"
   ];
 
   useEffect(() => {
@@ -60,10 +59,10 @@ const Community = () => {
       setFans([res.data, ...fans]);
       setFormData({ nickname: '', favoriteEra: '', message: '' });
       toast.success("Welcome to the Anthology.", {
-        style: { borderRadius: '1rem', background: '#1e293b', color: '#fff' }
+        style: { borderRadius: '1rem', background: '#0f172a', color: '#fff', border: '1px solid rgba(236,72,153,0.2)' }
       });
     } catch (error) {
-      toast.error("The vault is currently sealed.");
+      toast.error("Could not sign the wall.");
     } finally {
       setIsSubmitting(false);
     }
@@ -84,7 +83,7 @@ const Community = () => {
     <div className="container mx-auto px-6 py-20 min-h-screen">
       
       <div className="text-center mb-20 community-header">
-        <div className="inline-block px-4 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-500 text-xs font-black uppercase tracking-[0.3em] mb-6">
+        <div className="inline-block px-4 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-400 text-xs font-black uppercase tracking-[0.3em] mb-6">
           Global Connection
         </div>
         <h1 className="text-6xl md:text-8xl font-black text-white mb-6 tracking-tighter leading-none">
@@ -104,7 +103,7 @@ const Community = () => {
               <div className="space-y-2">
                 <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Identity</label>
                 <input 
-                  required type="text" maxLength="25" placeholder=" LavenderHaze99"
+                  required type="text" maxLength="25" placeholder="LavenderHaze99"
                   value={formData.nickname} onChange={e => setFormData({...formData, nickname: e.target.value})}
                   className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-bold focus:ring-2 focus:ring-pink-500 outline-none transition-all" 
                 />
@@ -124,9 +123,9 @@ const Community = () => {
                 <textarea 
                   required maxLength="120" placeholder="Long live all the magic we made..."
                   value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})}
-                  className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-bold min-h-[140px] focus:ring-2 focus:ring-pink-500 outline-none transition-all resize-none"
+                  className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-bold min-h-[140px] focus:ring-2 focus:ring-pink-500 outline-none transition-all resize-none" 
                 ></textarea>
-                <div className="text-right text-[10px] text-slate-600 font-black uppercase tracking-widest pr-2">{formData.message.length}/120</div>
+                <div className="text-right text-[10px] text-slate-500 font-black uppercase tracking-widest pr-2">{formData.message.length}/120</div>
               </div>
               <button 
                 type="submit" disabled={isSubmitting}
@@ -177,18 +176,8 @@ const Community = () => {
           )}
         </div>
       </div>
-      
-      <div className="mt-32 max-w-4xl mx-auto community-header">
-         <div className="flex items-center gap-6 mb-12">
-            <h2 className="text-4xl font-black text-white">Live Conversation</h2>
-            <div className="h-1 flex-grow bg-white/5 rounded-full"></div>
-         </div>
-         <LiveChat />
-      </div>
-
     </div>
   );
 };
 
 export default Community;
-

@@ -28,10 +28,10 @@ const Navbar = () => {
       <div className="container mx-auto px-6 sm:px-10 lg:px-12">
         <div className="flex justify-between items-center h-24">
           <Link to="/" className="text-3xl font-black tracking-tighter hover:scale-105 transition-transform duration-500 flex items-center gap-3 group">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-[0_0_30px_rgba(59,130,246,0.5)] group-hover:rotate-12 transition-transform">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center shadow-[0_0_30px_rgba(236,72,153,0.5)] group-hover:rotate-12 transition-transform">
               <span className="text-white text-2xl font-serif">S</span>
             </div>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-200 to-slate-400 font-black tracking-widest uppercase">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-pink-200 to-purple-300 font-black tracking-widest uppercase">
               SWIFtAY
             </span>
           </Link>
@@ -40,7 +40,6 @@ const Navbar = () => {
             <Link to="/about" className="text-slate-300 hover:text-pink-400 font-bold transition-all hover:-translate-y-0.5">About</Link>
             <Link to="/albums" className="text-slate-300 hover:text-pink-400 font-bold transition-all hover:-translate-y-0.5">Discography</Link>
             <Link to="/community" className="text-slate-300 hover:text-pink-400 font-bold transition-all hover:-translate-y-0.5">Community</Link>
-            <Link to="/trivia" className="text-slate-300 hover:text-pink-400 font-bold transition-all hover:-translate-y-0.5">Trivia</Link>
             
             <Link to="/admin" className="px-7 py-3 rounded-full font-black bg-white text-black hover:bg-pink-500 hover:text-white transition-all shadow-xl hover:shadow-pink-500/40 transform hover:-translate-y-1">
               Admin
@@ -69,7 +68,6 @@ const Navbar = () => {
             <Link to="/about" onClick={() => setIsMenuOpen(false)} className="block px-4 py-4 rounded-2xl text-xl font-bold text-slate-300 hover:bg-white/5 border border-transparent hover:border-white/10 transition-all">About</Link>
             <Link to="/albums" onClick={() => setIsMenuOpen(false)} className="block px-4 py-4 rounded-2xl text-xl font-bold text-slate-300 hover:bg-white/5 border border-transparent hover:border-white/10 transition-all">Discography</Link>
             <Link to="/community" onClick={() => setIsMenuOpen(false)} className="block px-4 py-4 rounded-2xl text-xl font-bold text-slate-300 hover:bg-white/5 border border-transparent hover:border-white/10 transition-all">Community</Link>
-            <Link to="/trivia" onClick={() => setIsMenuOpen(false)} className="block px-4 py-4 rounded-2xl text-xl font-bold text-slate-300 hover:bg-white/5 border border-transparent hover:border-white/10 transition-all">Trivia</Link>
             <Link to="/admin" onClick={() => setIsMenuOpen(false)} className="block px-6 py-5 rounded-2xl text-xl font-black bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-xl shadow-pink-500/20">Admin Panel</Link>
           </div>
         </div>
@@ -79,4 +77,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

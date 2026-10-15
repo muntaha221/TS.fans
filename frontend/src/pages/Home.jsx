@@ -139,12 +139,9 @@ const Home = () => {
               </div>
             </Link>
             
-            <Link to="/trivia" className="group px-10 py-4 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl hover:bg-white/10 transition-all font-black text-lg text-white flex items-center gap-3">
-              Enter the Vault
-              <svg className="w-5 h-5 text-blue-500 group-hover:rotate-12 transition-transform" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-              </svg>
+            <Link to="/albums" className="group px-10 py-4 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl hover:bg-white/10 transition-all font-black text-lg text-white flex items-center gap-3">
+              Listen & Lyrics
+              <span className="text-pink-400 group-hover:scale-125 transition-transform">🎤</span>
             </Link>
           </div>
         </div>

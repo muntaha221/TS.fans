@@ -4,9 +4,11 @@ import toast from 'react-hot-toast';
 import api from '../api';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { usePlayer } from '../context/PlayerContext';
 
 const SongDetails = () => {
   const { id } = useParams();
+  const { playSong, toggleLyrics } = usePlayer();
   const [song, setSong] = useState(null);
   const [loading, setLoading] = useState(true);
   const [commentText, setCommentText] = useState('');
@@ -126,14 +128,33 @@ const SongDetails = () => {
                  </div>
                  
                  <button 
-                   onClick={handleLike}
-                   className="flex items-center gap-3 px-8 py-3 rounded-2xl bg-pink-500 hover:bg-pink-600 transition-all text-white font-black shadow-xl shadow-pink-500/20 active:scale-95"
-                 >
-                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-                     <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-                   </svg>
-                   <span>{song.likes || 0} Likes</span>
-                 </button>
+                    onClick={() => playSong({ ...song, albumCover: song.albumId?.coverImage, albumTitle: song.albumId?.title })}
+                    className="flex items-center gap-3 px-8 py-3 rounded-2xl bg-white text-black hover:bg-pink-500 hover:text-white transition-all font-black shadow-xl active:scale-95"
+                  >
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" /></svg>
+                    <span>Play Record</span>
+                  </button>
+
+                  <button 
+                    onClick={() => {
+                      playSong({ ...song, albumCover: song.albumId?.coverImage, albumTitle: song.albumId?.title });
+                      toggleLyrics(true);
+                    }}
+                    className="flex items-center gap-3 px-8 py-3 rounded-2xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-black hover:opacity-90 transition-all shadow-xl shadow-pink-500/20 active:scale-95"
+                  >
+                    <span>🎤</span>
+                    <span>Lyrics Studio</span>
+                  </button>
+
+                  <button 
+                    onClick={handleLike}
+                    className="flex items-center gap-3 px-8 py-3 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 transition-all text-white font-black active:scale-95"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-pink-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                    </svg>
+                    <span>{song.likes || 0} Likes</span>
+                  </button>
               </div>
            </div>
         </div>

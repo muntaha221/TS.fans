@@ -28,23 +28,13 @@ const Albums = () => {
 
   useGSAP(() => {
     if (!loading && albums.length > 0 && containerRef.current) {
-      const cards = containerRef.current.querySelectorAll('.album-wrapper');
-      
-      cards.forEach((card, i) => {
-        gsap.fromTo(card, 
-          { opacity: 0, y: 50, scale: 0.9 },
-          {
-            opacity: 1, y: 0, scale: 1,
-            duration: 0.8,
-            ease: "power2.out",
-            force3D: true,
-            scrollTrigger: {
-              trigger: card,
-              start: "top 90%",
-              toggleActions: "play none none none"
-            }
-          }
-        );
+      gsap.from(".album-wrapper", {
+        opacity: 0,
+        y: 30,
+        stagger: 0.06,
+        duration: 0.6,
+        ease: "power2.out",
+        clearProps: "all"
       });
     }
   }, [loading, albums]);
