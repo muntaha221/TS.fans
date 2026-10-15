@@ -1,7 +1,7 @@
 import { initialAlbumsData } from '../data/discographyData';
 
-const ALBUMS_STORAGE_KEY = 'swiftay_discography_albums_v2';
-const FANS_STORAGE_KEY = 'swiftay_community_fans_v2';
+const ALBUMS_STORAGE_KEY = 'swiftay_discography_albums_v5';
+const FANS_STORAGE_KEY = 'swiftay_community_fans_v5';
 
 const initialFansData = [
   {
@@ -34,14 +34,31 @@ class DiscographyService {
 
   initStorage() {
     try {
+      // Purge all legacy or corrupted keys so old bad state is completely cleared
+      const legacyKeys = [
+        'swiftay_discography_albums',
+        'swiftay_discography_albums_v1',
+        'swiftay_discography_albums_v2',
+        'swiftay_discography_albums_v3',
+        'swiftay_discography_albums_v4',
+        'swiftay_community_fans',
+        'swiftay_community_fans_v2'
+      ];
+      legacyKeys.forEach(k => {
+        try { localStorage.removeItem(k); } catch (e) {}
+      });
+
       const stored = localStorage.getItem(ALBUMS_STORAGE_KEY);
       if (!stored) {
         localStorage.setItem(ALBUMS_STORAGE_KEY, JSON.stringify(initialAlbumsData));
       } else {
-        // Check if Patient Zero is present in stored albums; if not, merge initial
-        const albums = JSON.parse(stored);
-        const hasPatientZero = albums.some(a => a.songs && a.songs.some(s => s.title === 'Patient Zero'));
-        if (!hasPatientZero) {
+        // Validate stored data has authentic songs
+        try {
+          const parsed = JSON.parse(stored);
+          if (!Array.isArray(parsed) || parsed.length === 0 || !parsed[0].songs || parsed[0].songs.length === 0) {
+            localStorage.setItem(ALBUMS_STORAGE_KEY, JSON.stringify(initialAlbumsData));
+          }
+        } catch {
           localStorage.setItem(ALBUMS_STORAGE_KEY, JSON.stringify(initialAlbumsData));
         }
       }
@@ -50,17 +67,27 @@ class DiscographyService {
         localStorage.setItem(FANS_STORAGE_KEY, JSON.stringify(initialFansData));
       }
     } catch (e) {
-      console.warn('LocalStorage error, using in-memory data:', e);
+      console.warn('[DiscographyService] LocalStorage error, using memory data:', e);
     }
+  }
+
+  resetStorage() {
+    try {
+      localStorage.setItem(ALBUMS_STORAGE_KEY, JSON.stringify(initialAlbumsData));
+      localStorage.setItem(FANS_STORAGE_KEY, JSON.stringify(initialFansData));
+    } catch (e) {}
+    return initialAlbumsData;
   }
 
   getAlbums() {
     try {
       const data = localStorage.getItem(ALBUMS_STORAGE_KEY);
-      return data ? JSON.parse(data) : initialAlbumsData;
-    } catch {
-      return initialAlbumsData;
-    }
+      if (data) {
+        const parsed = JSON.parse(data);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {}
+    return initialAlbumsData;
   }
 
   saveAlbums(albums) {
@@ -72,20 +99,49 @@ class DiscographyService {
   }
 
   getAlbumById(id) {
+    if (!id) return null;
     const albums = this.getAlbums();
-    // Support matching by ID or case-insensitive title match
-    const album = albums.find(a => a._id === id || a._id === `album_${id}`);
+    const cleanId = String(id).trim();
+
+    // Match by _id (e.g. "album_1"), with prefix or raw number
+    let album = albums.find(a => 
+      a._id === cleanId || 
+      a._id === `album_${cleanId}` ||
+      cleanId.endsWith(a._id) ||
+      a.title.toLowerCase() === cleanId.toLowerCase()
+    );
+
+    // Fallback to initial data if not found in storage
+    if (!album) {
+      album = initialAlbumsData.find(a => 
+        a._id === cleanId || 
+        a._id === `album_${cleanId}` ||
+        a.title.toLowerCase() === cleanId.toLowerCase()
+      );
+    }
+
     if (!album) return null;
+
+    // Ensure songs array is always populated
+    let songs = album.songs;
+    if (!Array.isArray(songs) || songs.length === 0) {
+      const orig = initialAlbumsData.find(a => a._id === album._id || a.title === album.title);
+      songs = orig ? orig.songs : [];
+    }
+
     return {
       album,
-      songs: album.songs || []
+      songs: songs || []
     };
   }
 
   getSongById(id) {
+    if (!id) return null;
+    const cleanId = String(id).trim();
     const albums = this.getAlbums();
+
     for (const album of albums) {
-      const song = (album.songs || []).find(s => s._id === id || s._id === `song_${id}`);
+      const song = (album.songs || []).find(s => s._id === cleanId || s._id === `song_${cleanId}`);
       if (song) {
         return {
           ...song,
@@ -93,10 +149,30 @@ class DiscographyService {
             _id: album._id,
             title: album.title,
             coverImage: album.coverImage
-          }
+          },
+          albumTitle: album.title,
+          albumCover: album.coverImage
         };
       }
     }
+
+    // Fallback to initialAlbumsData
+    for (const album of initialAlbumsData) {
+      const song = (album.songs || []).find(s => s._id === cleanId || s._id === `song_${cleanId}`);
+      if (song) {
+        return {
+          ...song,
+          albumId: {
+            _id: album._id,
+            title: album.title,
+            coverImage: album.coverImage
+          },
+          albumTitle: album.title,
+          albumCover: album.coverImage
+        };
+      }
+    }
+
     return null;
   }
 
@@ -119,9 +195,9 @@ class DiscographyService {
     const albums = this.getAlbums();
     let targetAlbum = albums.find(a => a._id === songData.albumId);
     
-    // If no album matches directly, default to the first album or "The Vault"
+    // Default to Life of a Showgirl or last vault album
     if (!targetAlbum && albums.length > 0) {
-      targetAlbum = albums[0];
+      targetAlbum = albums.find(a => a.title.includes('Showgirl')) || albums[albums.length - 1];
     }
 
     if (!targetAlbum) {
@@ -132,7 +208,7 @@ class DiscographyService {
       _id: 'song_' + Date.now(),
       title: songData.title,
       duration: songData.duration || '3:30',
-      previewUrl: songData.previewUrl || 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ed/0e/73/ed0e73df-8ac0-cc4d-c683-62989356fabe/mzaf_5570843588806201632.plus.aac.p.m4a',
+      previewUrl: songData.previewUrl || null,
       albumId: {
         _id: targetAlbum._id,
         title: targetAlbum.title,
@@ -141,11 +217,11 @@ class DiscographyService {
       albumTitle: targetAlbum.title,
       albumCover: targetAlbum.coverImage,
       likes: 13,
-      lyrics: songData.lyrics || `[Verse 1]\n${songData.title} rings across the quiet air\nA newly unveiled memory waiting there...\n\n[Chorus]\nTaylor Swift - ${songData.title}\nRecorded for the Vault and forever remembered.`,
+      lyrics: songData.lyrics || `[Verse 1]\n${songData.title} newly added to the Vault.`,
       comments: [
         {
           username: 'SwiftieAdmin',
-          text: `Added ${songData.title} to ${targetAlbum.title}! Enjoy this brand new track.`,
+          text: `Added ${songData.title} to ${targetAlbum.title}!`,
           timestamp: new Date().toISOString()
         }
       ]

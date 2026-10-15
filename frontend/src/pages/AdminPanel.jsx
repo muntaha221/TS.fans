@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
 import toast from 'react-hot-toast';
+import discographyService from '../services/discographyService';
 
 const AdminPanel = () => {
   const [albums, setAlbums] = useState([]);
@@ -99,19 +100,34 @@ const AdminPanel = () => {
         </div>
       </div>
 
-      {/* Tab Switcher */}
-      <div className="flex gap-2 sm:gap-4 mb-6 sm:mb-8 bg-white/[0.03] p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border border-white/[0.06] w-fit">
+      {/* Tab Switcher & Restore Clean Data */}
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-6 sm:mb-8">
+        <div className="flex gap-2 sm:gap-4 bg-white/[0.03] p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border border-white/[0.06] w-fit">
+          <button
+            onClick={() => setActiveTab('songs')}
+            className={`px-4 sm:px-8 py-2 sm:py-3 font-black text-sm sm:text-lg rounded-lg sm:rounded-xl transition-all duration-300 ${activeTab === 'songs' ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg' : 'text-slate-500 hover:text-white'}`}
+          >
+            Add Tracks
+          </button>
+          <button
+            onClick={() => setActiveTab('albums')}
+            className={`px-4 sm:px-8 py-2 sm:py-3 font-black text-sm sm:text-lg rounded-lg sm:rounded-xl transition-all duration-300 ${activeTab === 'albums' ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg' : 'text-slate-500 hover:text-white'}`}
+          >
+            New Era
+          </button>
+        </div>
+
         <button
-          onClick={() => setActiveTab('songs')}
-          className={`px-4 sm:px-8 py-2 sm:py-3 font-black text-sm sm:text-lg rounded-lg sm:rounded-xl transition-all duration-300 ${activeTab === 'songs' ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg' : 'text-slate-500 hover:text-white'}`}
+          onClick={() => {
+            discographyService.resetStorage();
+            fetchAlbums();
+            toast.success('Restored 100% clean official Vault data with real lyrics!', { icon: '✨' });
+          }}
+          className="px-4 py-2 sm:py-2.5 rounded-xl border border-violet-500/30 bg-violet-600/10 hover:bg-violet-600/20 text-violet-400 font-bold text-xs sm:text-sm transition-all flex items-center gap-2 active:scale-95"
+          title="Clear any outdated browser cache and reload genuine Taylor Swift discography"
         >
-          Add Tracks
-        </button>
-        <button
-          onClick={() => setActiveTab('albums')}
-          className={`px-4 sm:px-8 py-2 sm:py-3 font-black text-sm sm:text-lg rounded-lg sm:rounded-xl transition-all duration-300 ${activeTab === 'albums' ? 'bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg' : 'text-slate-500 hover:text-white'}`}
-        >
-          New Era
+          <span>🔄</span>
+          <span>Restore Clean Official Discography</span>
         </button>
       </div>
 

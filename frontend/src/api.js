@@ -27,12 +27,19 @@ const api = {
         const id = url.replace('/albums/', '').split('?')[0];
         const data = discographyService.getAlbumById(id);
         if (data) return createMockResponse(data);
-        return createMockResponse({ album: discographyService.getAlbums()[0], songs: [] });
+        const fallbackAlbum = discographyService.getAlbums().find(a => a._id === id || a._id === `album_${id}`) || discographyService.getAlbums()[0];
+        return createMockResponse({ album: fallbackAlbum, songs: fallbackAlbum?.songs || [] });
       }
       if (url.startsWith('/songs/preview/fetch')) {
-        return createMockResponse({
-          previewUrl: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/4d/9f/fd/4d9ffd05-b520-fee9-292b-f0d217df21b9/mzaf_6042400680719050354.plus.aac.p.m4a'
-        });
+        const term = config?.params?.term || 'Taylor Swift';
+        try {
+          const itunesRes = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(term)}&entity=song&limit=1`);
+          const itunesData = await itunesRes.json();
+          if (itunesData?.results?.[0]?.previewUrl) {
+            return createMockResponse({ previewUrl: itunesData.results[0].previewUrl });
+          }
+        } catch (e) {}
+        return createMockResponse({ previewUrl: null });
       }
       if (url.startsWith('/songs/')) {
         const id = url.replace('/songs/', '').split('?')[0];
@@ -46,7 +53,6 @@ const api = {
 
     try {
       const res = await axiosInstance.get(url, config);
-      // If remote returned an empty array for albums or fans, check if fallback has rich data
       if (url === '/albums' && Array.isArray(res.data) && res.data.length === 0) {
         return createMockResponse(discographyService.getAlbums());
       }
@@ -63,13 +69,20 @@ const api = {
         const id = url.replace('/albums/', '').split('?')[0];
         const data = discographyService.getAlbumById(id);
         if (data) return createMockResponse(data);
-        return createMockResponse({ album: discographyService.getAlbums()[0], songs: [] });
+        const fallbackAlbum = discographyService.getAlbums().find(a => a._id === id || a._id === `album_${id}`) || discographyService.getAlbums()[0];
+        return createMockResponse({ album: fallbackAlbum, songs: fallbackAlbum?.songs || [] });
       }
 
       if (url.startsWith('/songs/preview/fetch')) {
-        return createMockResponse({
-          previewUrl: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/4d/9f/fd/4d9ffd05-b520-fee9-292b-f0d217df21b9/mzaf_6042400680719050354.plus.aac.p.m4a'
-        });
+        const term = config?.params?.term || 'Taylor Swift';
+        try {
+          const itunesRes = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(term)}&entity=song&limit=1`);
+          const itunesData = await itunesRes.json();
+          if (itunesData?.results?.[0]?.previewUrl) {
+            return createMockResponse({ previewUrl: itunesData.results[0].previewUrl });
+          }
+        } catch (e) {}
+        return createMockResponse({ previewUrl: null });
       }
 
       if (url.startsWith('/songs/')) {

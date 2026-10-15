@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { usePlayer } from '../context/PlayerContext';
 import api from '../api';
 import toast from 'react-hot-toast';
@@ -93,14 +94,19 @@ const SongItem = ({ song, index, onLikeUpdate, albumCover, albumTitle, playlist 
         </div>
 
         <div className="min-w-0">
-          <h4 className={`text-sm sm:text-base font-black truncate transition-colors flex items-center gap-2 ${isCurrent ? 'text-violet-400' : 'text-white group-hover:text-violet-300'}`}>
-            {song.title}
+          <Link
+            to={`/songs/${song._id}`}
+            onClick={(e) => e.stopPropagation()}
+            className={`text-sm sm:text-base font-black truncate transition-colors flex items-center gap-2 hover:text-violet-400 ${isCurrent ? 'text-violet-400' : 'text-white'}`}
+            title="Open Song Details"
+          >
+            <span className="hover:underline">{song.title}</span>
             {song.title === 'Patient Zero' && (
               <span className="px-2 py-0.5 rounded-full bg-violet-600/20 text-violet-400 text-[8px] font-black uppercase tracking-wider border border-violet-500/30">
                 Vault
               </span>
             )}
-          </h4>
+          </Link>
           <div className="flex items-center gap-2 mt-0.5">
              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-slate-600">{song.duration}</span>
              <div className="w-1 h-1 rounded-full bg-slate-800"></div>
@@ -113,12 +119,24 @@ const SongItem = ({ song, index, onLikeUpdate, albumCover, albumTitle, playlist 
         {/* Quick Lyrics button */}
         <button
           onClick={handleOpenLyrics}
-          title="Open Lyrics"
-          className="px-2 py-1 rounded-lg bg-white/[0.03] hover:bg-white/10 text-slate-400 hover:text-white text-xs font-bold transition-all border border-white/[0.04] hidden sm:flex items-center gap-1"
+          title="Open Lyrics Studio"
+          className="px-2.5 py-1 rounded-lg bg-white/[0.03] hover:bg-white/10 text-slate-400 hover:text-white text-xs font-bold transition-all border border-white/[0.04] hidden sm:flex items-center gap-1"
         >
           <span>🎤</span>
           <span>Lyrics</span>
         </button>
+
+        {/* View Song Link */}
+        <Link
+          to={`/songs/${song._id}`}
+          onClick={(e) => e.stopPropagation()}
+          title="View song record page"
+          className="p-1.5 rounded-lg bg-white/[0.03] hover:bg-white/10 text-slate-400 hover:text-white transition-all border border-white/[0.04] flex items-center justify-center"
+        >
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+          </svg>
+        </Link>
 
         {/* Like Button */}
         <button

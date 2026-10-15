@@ -73,10 +73,33 @@ export const PlayerProvider = ({ children }) => {
     }
 
     setCurrentSong(song);
-    const audioUrl = song.previewUrl || 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/4d/9f/fd/4d9ffd05-b520-fee9-292b-f0d217df21b9/mzaf_6042400680719050354.plus.aac.p.m4a';
-    audioRef.current.src = audioUrl;
-    audioRef.current.play().catch(e => console.log('Autoplay policy caught:', e));
-    setIsPlaying(true);
+    if (song.previewUrl) {
+      audioRef.current.src = song.previewUrl;
+      audioRef.current.play().catch(e => console.log('Autoplay policy caught:', e));
+      setIsPlaying(true);
+    } else {
+      // Dynamic fetch from iTunes for the exact Taylor Swift track
+      const cleanTitle = (song.title || '').replace(/\(Taylor's Version\)/gi, '').replace(/\(From The Vault\)/gi, '').trim();
+      const term = encodeURIComponent(`Taylor Swift ${cleanTitle}`);
+      fetch(`https://itunes.apple.com/search?term=${term}&entity=song&limit=1`)
+        .then(r => r.json())
+        .then(data => {
+          if (data?.results?.[0]?.previewUrl) {
+            const previewUrl = data.results[0].previewUrl;
+            song.previewUrl = previewUrl;
+            audioRef.current.src = previewUrl;
+            audioRef.current.play().catch(e => console.log('Autoplay caught:', e));
+            setIsPlaying(true);
+          } else {
+            console.log('No audio preview available for this track');
+            setIsPlaying(false);
+          }
+        })
+        .catch(err => {
+          console.warn('Could not load track preview:', err);
+          setIsPlaying(false);
+        });
+    }
   };
 
   const togglePlay = () => {

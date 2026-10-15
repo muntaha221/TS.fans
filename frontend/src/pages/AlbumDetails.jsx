@@ -67,12 +67,20 @@ const AlbumDetails = () => {
     );
   }
 
-  if (!albumData || !albumData.album) {
-    return <div className="text-center py-20 text-xl font-bold bg-[#050505] text-white min-h-screen">Era not found</div>;
-  }
-
-  const { album, songs } = albumData;
+  const album = albumData?.album || (albumData?.title ? albumData : null);
+  const songs = albumData?.songs || album?.songs || [];
   const safeSongs = Array.isArray(songs) ? songs : [];
+
+  if (!album) {
+    return (
+      <div className="text-center py-20 text-xl font-bold bg-[#050505] text-white min-h-screen flex flex-col items-center justify-center gap-4">
+        <span>Era not found in the Anthology</span>
+        <Link to="/albums" className="px-6 py-2 rounded-full bg-violet-600 text-white font-bold text-sm">
+          Browse All Eras
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pb-20">

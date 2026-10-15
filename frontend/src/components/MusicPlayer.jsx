@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { usePlayer } from '../context/PlayerContext';
+import { fetchLiveLyrics } from '../services/lyricsService';
 
 const MusicPlayer = () => {
   const {
@@ -21,12 +22,27 @@ const MusicPlayer = () => {
 
   const [isMuted, setIsMuted] = useState(false);
   const [prevVolume, setPrevVolume] = useState(0.8);
+  const [dynamicLyrics, setDynamicLyrics] = useState('');
+
+  useEffect(() => {
+    if (!currentSong) return;
+    setDynamicLyrics(currentSong.lyrics || '');
+
+    if (!currentSong.lyrics || currentSong.lyrics.length < 40) {
+      fetchLiveLyrics(currentSong.title).then(lyrics => {
+        if (lyrics) {
+          setDynamicLyrics(lyrics);
+          currentSong.lyrics = lyrics;
+        }
+      });
+    }
+  }, [currentSong]);
 
   if (!currentSong) return null;
 
   const coverImage = currentSong.albumCover || (currentSong.albumId && currentSong.albumId.coverImage) || 'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?q=80&w=400';
   const albumTitle = currentSong.albumTitle || (currentSong.albumId && currentSong.albumId.title) || 'Taylor Swift';
-  const songLyrics = currentSong.lyrics || `[Verse 1]\n${currentSong.title} echoes in the midnight glow\nEvery memory unfolds as the guitars play low...\n\n[Chorus]\nTaylor Swift - ${currentSong.title}\nRecorded for the Vault and forever in the Anthology.`;
+  const songLyrics = dynamicLyrics || currentSong.lyrics || `[Verse 1]\n${currentSong.title} echoes in the midnight glow\nEvery memory unfolds as the guitars play low...`;
 
   const handleMuteToggle = () => {
     if (isMuted) {

@@ -5,6 +5,7 @@ import api from '../api';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { usePlayer } from '../context/PlayerContext';
+import { fetchLiveLyrics } from '../services/lyricsService';
 
 const SongDetails = () => {
   const { id } = useParams();
@@ -19,7 +20,14 @@ const SongDetails = () => {
     const fetchSong = async () => {
       try {
         const res = await api.get(`/songs/${id}`);
-        setSong(res.data);
+        const songData = res.data;
+        if (songData) {
+          if (!songData.lyrics || songData.lyrics.length < 30) {
+            const live = await fetchLiveLyrics(songData.title);
+            if (live) songData.lyrics = live;
+          }
+          setSong(songData);
+        }
       } catch (error) {
         console.error('Error fetching song', error);
       } finally {
@@ -167,9 +175,59 @@ const SongDetails = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-12">
-          {/* Comments */}
-          <div className="lg:col-span-2 space-y-6 sm:space-y-8">
-            <h2 className="text-2xl sm:text-4xl font-black text-white px-1">Fan Anthology</h2>
+          {/* Main Left: Lyrics & Comments */}
+          <div className="lg:col-span-2 space-y-8 sm:space-y-12">
+
+            {/* Lyric Manuscript */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between px-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl sm:text-2xl">📜</span>
+                  <h2 className="text-2xl sm:text-4xl font-black text-white">The Manuscript</h2>
+                </div>
+                <button
+                  onClick={() => {
+                    playSong({ ...song, albumCover: song.albumId?.coverImage, albumTitle: song.albumId?.title });
+                    toggleLyrics(true);
+                  }}
+                  className="text-xs font-bold text-violet-400 hover:text-white transition-colors flex items-center gap-1"
+                >
+                  <span>Open Studio</span>
+                  <span>&rarr;</span>
+                </button>
+              </div>
+
+              <div className="bg-white/[0.02] rounded-2xl sm:rounded-[2rem] border border-white/[0.04] p-6 sm:p-10 backdrop-blur-xl">
+                {song.lyrics ? (
+                  <div className="space-y-6">
+                    {song.lyrics.split('\n\n').map((stanza, sIdx) => (
+                      <div key={sIdx} className="space-y-1.5 p-4 rounded-xl bg-white/[0.01] border border-white/[0.02]">
+                        {stanza.split('\n').map((line, lIdx) => (
+                          <p
+                            key={lIdx}
+                            className={`text-sm sm:text-base leading-relaxed ${
+                              line.startsWith('[')
+                                ? 'text-violet-400 font-black text-xs uppercase tracking-widest mb-2'
+                                : 'text-slate-300 font-medium'
+                            }`}
+                          >
+                            {line}
+                          </p>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-10 text-slate-500 font-bold italic">
+                    Manuscript is loading from the vault...
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Comments Section */}
+            <div className="space-y-4 sm:space-y-6">
+              <h2 className="text-2xl sm:text-4xl font-black text-white px-1">Fan Anthology</h2>
 
             <div className="bg-white/[0.02] rounded-2xl sm:rounded-[2rem] border border-white/[0.04] p-5 sm:p-8 backdrop-blur-xl">
               <form onSubmit={handleCommentSubmit} className="mb-8 sm:mb-12">
@@ -234,6 +292,7 @@ const SongDetails = () => {
                   ))
                 )}
               </div>
+            </div>
             </div>
           </div>
 
