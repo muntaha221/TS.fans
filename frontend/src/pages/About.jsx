@@ -43,83 +43,81 @@ const About = () => {
     });
   }, []);
 
-  // Animate text change
   useGSAP(() => {
-    gsap.fromTo(".journey-text", 
+    gsap.fromTo(".journey-text",
       { opacity: 0, x: -20 },
       { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }
     );
   }, [activeIndex]);
 
   return (
-    <div className="container mx-auto px-6 py-20 min-h-screen about-content">
-      <div className="max-w-6xl mx-auto space-y-16">
-        
-        <div className="text-center relative py-24 px-10 rounded-[4rem] bg-slate-900 shadow-2xl overflow-hidden border border-white/5">
-          {/* Animated Background Elements */}
-          <div className="absolute top-[-20%] left-[-20%] w-[60%] h-[60%] bg-pink-500/10 blur-[120px] rounded-full animate-float"></div>
-          <div className="absolute bottom-[-20%] right-[-20%] w-[60%] h-[60%] bg-purple-600/10 blur-[120px] rounded-full animate-float" style={{ animationDelay: '2s' }}></div>
-          
-          <h1 className="text-6xl md:text-8xl font-black text-white mb-6 tracking-tighter relative z-10 leading-none">
-            The <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">Legend</span> Of Taylor
+    <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-20 min-h-screen about-content">
+      <div className="max-w-6xl mx-auto space-y-10 sm:space-y-16">
+
+        <div className="text-center relative py-12 sm:py-24 px-6 sm:px-10 rounded-2xl sm:rounded-[3rem] bg-[#0a0a0a] shadow-2xl overflow-hidden border border-white/[0.04]">
+          <div className="absolute top-[-20%] left-[-20%] w-[60%] h-[60%] bg-violet-600/8 blur-[100px] rounded-full animate-float"></div>
+          <div className="absolute bottom-[-20%] right-[-20%] w-[60%] h-[60%] bg-blue-600/8 blur-[100px] rounded-full animate-float" style={{ animationDelay: '2s' }}></div>
+
+          <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-white mb-4 sm:mb-6 tracking-tighter relative z-10 leading-none">
+            The <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 to-blue-500">Legend</span> Of Taylor
           </h1>
-          <p className="text-xl md:text-2xl text-slate-400 font-bold tracking-wide relative z-10 max-w-3xl mx-auto">
+          <p className="text-base sm:text-xl md:text-2xl text-slate-500 font-bold tracking-wide relative z-10 max-w-3xl mx-auto">
             Singer. Songwriter. Visionary. The Architect of Modern Pop.
           </p>
         </div>
 
-        <div className="relative rounded-[3.5rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)] border border-white/10 group h-[500px] md:h-[700px]">
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent z-10"></div>
-          <img 
-            src="/about_hero.png" 
-            alt="Taylor Swift on stage" 
+        <div className="relative rounded-2xl sm:rounded-[3rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)] border border-white/[0.06] group h-[250px] sm:h-[500px] md:h-[700px]">
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/30 to-transparent z-10"></div>
+          <img
+            src="/about_hero.png"
+            alt="Taylor Swift on stage"
             className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
           />
-          <div className="absolute bottom-12 left-6 md:left-12 z-20">
-             <div className="flex items-center gap-4 text-white">
-                <div className="w-12 h-1 px-4 bg-pink-500"></div>
-                <span className="font-black text-xs uppercase tracking-[0.3em]">Era Tour Mainstage</span>
+          <div className="absolute bottom-6 sm:bottom-12 left-4 sm:left-12 z-20">
+             <div className="flex items-center gap-3 text-white">
+                <div className="w-8 sm:w-12 h-1 bg-violet-500"></div>
+                <span className="font-black text-[10px] sm:text-xs uppercase tracking-[0.3em]">Eras Tour Mainstage</span>
              </div>
           </div>
         </div>
 
         {/* Interactive Journey Timeline */}
-        <div className="bg-white/5 border border-white/10 rounded-[3rem] p-8 md:p-16 backdrop-blur-md mt-20">
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-12 text-center tracking-tighter">
+        <div className="bg-white/[0.02] border border-white/[0.04] rounded-2xl sm:rounded-[3rem] p-6 sm:p-16 backdrop-blur-md mt-10 sm:mt-20">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-8 sm:mb-12 text-center tracking-tighter">
             Her Musical Journey
           </h2>
-          
-          <div className="flex flex-col lg:flex-row gap-12 items-start">
+
+          <div className="flex flex-col lg:flex-row gap-6 sm:gap-12 items-start">
             {/* Timeline Buttons */}
-            <div className="w-full lg:w-1/3 flex flex-row lg:flex-col overflow-x-auto lg:overflow-x-visible gap-4 pb-4 lg:pb-0 hide-scrollbar">
+            <div className="w-full lg:w-1/3 flex flex-row lg:flex-col overflow-x-auto lg:overflow-x-visible gap-3 pb-3 lg:pb-0 hide-scrollbar">
               {journeyData.map((item, idx) => (
                 <button
                   key={item.year}
                   onClick={() => setActiveIndex(idx)}
-                  className={`flex-shrink-0 text-left px-8 py-5 rounded-3xl transition-all duration-300 border ${
-                    activeIndex === idx 
-                      ? 'bg-pink-500/20 border-pink-500 text-white shadow-[0_0_30px_rgba(236,72,153,0.3)]' 
-                      : 'bg-white/5 border-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
+                  className={`flex-shrink-0 text-left px-5 sm:px-8 py-3 sm:py-5 rounded-2xl transition-all duration-300 border ${
+                    activeIndex === idx
+                      ? 'bg-violet-600/15 border-violet-500/40 text-white shadow-[0_0_20px_rgba(124,58,237,0.15)]'
+                      : 'bg-white/[0.02] border-white/[0.04] text-slate-500 hover:bg-white/[0.05] hover:text-white'
                   }`}
                 >
-                  <div className={`text-sm font-black tracking-widest mb-1 ${activeIndex === idx ? 'text-pink-400' : 'text-slate-500'}`}>
+                  <div className={`text-[10px] sm:text-sm font-black tracking-widest mb-1 ${activeIndex === idx ? 'text-violet-400' : 'text-slate-600'}`}>
                     {item.year}
                   </div>
-                  <div className="font-bold text-lg">{item.title}</div>
+                  <div className="font-bold text-sm sm:text-lg">{item.title}</div>
                 </button>
               ))}
             </div>
 
             {/* Timeline Content */}
-            <div className="w-full lg:w-2/3 bg-slate-900/50 rounded-[2rem] p-8 md:p-12 border border-white/5 journey-text h-full min-h-[300px] flex flex-col justify-center">
-              <div className="inline-flex items-center gap-3 mb-6">
-                 <div className="w-3 h-3 rounded-full bg-pink-500 animate-pulse"></div>
-                 <span className="text-pink-500 font-black tracking-widest uppercase">{journeyData[activeIndex].year}</span>
+            <div className="w-full lg:w-2/3 bg-[#0a0a0a]/50 rounded-2xl p-6 sm:p-12 border border-white/[0.04] journey-text min-h-[200px] sm:min-h-[300px] flex flex-col justify-center">
+              <div className="inline-flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+                 <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-violet-500 animate-pulse"></div>
+                 <span className="text-violet-500 font-black tracking-widest uppercase text-sm">{journeyData[activeIndex].year}</span>
               </div>
-              <h3 className="text-4xl md:text-5xl font-black text-white mb-8 tracking-tighter">
+              <h3 className="text-2xl sm:text-4xl md:text-5xl font-black text-white mb-4 sm:mb-8 tracking-tighter">
                 {journeyData[activeIndex].title}
               </h3>
-              <p className="text-xl md:text-2xl text-slate-300 leading-relaxed font-serif">
+              <p className="text-base sm:text-xl md:text-2xl text-slate-400 leading-relaxed font-serif">
                 {journeyData[activeIndex].desc}
               </p>
             </div>
@@ -132,5 +130,3 @@ const About = () => {
 };
 
 export default About;
-
-

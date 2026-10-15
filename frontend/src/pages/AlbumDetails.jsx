@@ -48,7 +48,7 @@ const AlbumDetails = () => {
   const handleLikeUpdate = (songId, likes) => {
     setAlbumData(prev => ({
       ...prev,
-      songs: prev.songs.map(song => 
+      songs: (prev.songs || []).map(song =>
         song._id === songId ? { ...song, likes } : song
       )
     }));
@@ -56,11 +56,11 @@ const AlbumDetails = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-slate-950">
+      <div className="flex justify-center items-center h-screen bg-[#050505]">
         <div className="relative">
-          <div className="w-24 h-24 rounded-full border-2 border-white/5 animate-ping"></div>
+          <div className="w-20 h-20 rounded-full border-2 border-white/[0.04] animate-ping"></div>
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-4 h-4 bg-pink-500 rounded-full animate-bounce"></div>
+            <div className="w-3 h-3 bg-violet-500 rounded-full animate-bounce"></div>
           </div>
         </div>
       </div>
@@ -68,91 +68,92 @@ const AlbumDetails = () => {
   }
 
   if (!albumData || !albumData.album) {
-    return <div className="text-center py-20 text-xl font-bold bg-slate-950 text-white min-h-screen">Era not found</div>;
+    return <div className="text-center py-20 text-xl font-bold bg-[#050505] text-white min-h-screen">Era not found</div>;
   }
 
   const { album, songs } = albumData;
+  const safeSongs = Array.isArray(songs) ? songs : [];
 
   return (
     <div className="min-h-screen pb-20">
       {/* Background Decor */}
-      <div className="fixed inset-0 pointer-events-none opacity-30">
-        <img 
-          src={album.coverImage} 
+      <div className="fixed inset-0 pointer-events-none opacity-20">
+        <img
+          src={album.coverImage}
           className="w-full h-full object-cover blur-[150px] scale-150 rotate-12"
           alt=""
         />
       </div>
 
-      <div className="container mx-auto px-6 relative z-10 pt-10">
-        <div className="mb-10">
-          <Link to="/albums" className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all font-bold text-slate-300">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10 pt-6 sm:pt-10">
+        <div className="mb-6 sm:mb-10">
+          <Link to="/albums" className="inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.06] transition-all font-bold text-slate-400 text-sm">
             &larr; Back to Discography
           </Link>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-16">
+        <div className="flex flex-col lg:flex-row gap-8 sm:gap-16">
           {/* Left Column: Cover */}
-          <div className="w-full lg:w-[400px] flex-shrink-0 album-hero-content">
-            <div className="sticky top-32">
+          <div className="w-full lg:w-[350px] flex-shrink-0 album-hero-content">
+            <div className="lg:sticky lg:top-32">
               <div className="relative group">
-                <div className="absolute inset-0 bg-pink-500/20 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
-                <img 
-                  src={album.coverImage || 'https://via.placeholder.com/600'} 
-                  alt={album.title} 
-                  className="w-full rounded-[2.5rem] shadow-[0_40px_80px_-15px_rgba(0,0,0,0.8)] aspect-square object-cover relative z-10 border border-white/10"
+                <div className="absolute inset-0 bg-violet-600/15 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+                <img
+                  src={album.coverImage || 'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?q=80&w=600'}
+                  alt={album.title}
+                  className="w-full rounded-2xl sm:rounded-[2rem] shadow-[0_40px_80px_-15px_rgba(0,0,0,0.8)] aspect-square object-cover relative z-10 border border-white/[0.06]"
                 />
               </div>
-              
-              <div className="mt-12 space-y-6">
-                <div className="p-8 rounded-[2rem] bg-white/5 border border-white/5 backdrop-blur-md">
-                   <div className="flex justify-between items-center mb-4">
-                     <span className="text-slate-500 font-bold uppercase tracking-widest text-xs">Released</span>
-                     <span className="text-white font-black">{new Date(album.releaseDate).getFullYear()}</span>
+
+              <div className="mt-8 sm:mt-12 space-y-4 sm:space-y-6">
+                <div className="p-5 sm:p-6 rounded-xl sm:rounded-2xl bg-white/[0.03] border border-white/[0.04] backdrop-blur-md">
+                   <div className="flex justify-between items-center mb-3">
+                     <span className="text-slate-600 font-bold uppercase tracking-widest text-[10px]">Released</span>
+                     <span className="text-white font-black text-sm">{new Date(album.releaseDate).getFullYear()}</span>
                    </div>
                    <div className="flex justify-between items-center">
-                     <span className="text-slate-500 font-bold uppercase tracking-widest text-xs">Tracks</span>
-                     <span className="text-white font-black">{songs.length}</span>
+                     <span className="text-slate-600 font-bold uppercase tracking-widest text-[10px]">Tracks</span>
+                     <span className="text-white font-black text-sm">{safeSongs.length}</span>
                    </div>
                 </div>
               </div>
             </div>
           </div>
-          
+
           {/* Right Column: Details */}
           <div className="flex-grow album-hero-content">
-            <h1 className="text-6xl md:text-8xl font-black text-white tracking-tighter mb-8 leading-none">
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tighter mb-6 sm:mb-8 leading-none">
               {album.title}
             </h1>
-            
-            <div className="bg-white/5 border-l-4 border-pink-500 p-8 rounded-r-3xl mb-16 backdrop-blur-sm">
-              <p className="text-xl md:text-2xl text-slate-300 leading-relaxed font-medium">
+
+            <div className="bg-white/[0.03] border-l-4 border-violet-500 p-5 sm:p-8 rounded-r-2xl mb-10 sm:mb-16 backdrop-blur-sm">
+              <p className="text-base sm:text-xl md:text-2xl text-slate-400 leading-relaxed font-medium">
                 {album.description}
               </p>
             </div>
 
-            <div className="flex flex-col gap-6">
-              <div className="flex items-center justify-between mb-4 px-4">
-                <h3 className="text-3xl font-black text-white">The Tracklist</h3>
-                <span className="text-pink-500 font-bold text-sm bg-pink-500/10 px-4 py-1.5 rounded-full uppercase tracking-widest">Original Records</span>
+            <div className="flex flex-col gap-4 sm:gap-6">
+              <div className="flex items-center justify-between mb-2 sm:mb-4 px-2 sm:px-4">
+                <h3 className="text-xl sm:text-3xl font-black text-white">The Tracklist</h3>
+                <span className="text-violet-500 font-bold text-[10px] sm:text-sm bg-violet-500/10 px-3 sm:px-4 py-1 rounded-full uppercase tracking-widest">Original Records</span>
               </div>
 
-              {songs.length === 0 ? (
-                <div className="p-20 text-center glass-card">
+              {safeSongs.length === 0 ? (
+                <div className="p-12 sm:p-20 text-center glass-card">
                   <p className="text-slate-500 font-bold italic">This era's records are being cataloged...</p>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {songs.map((song, index) => (
+                <div className="space-y-2 sm:space-y-3">
+                  {safeSongs.map((song, index) => (
                     <div key={song._id} className="tracklist-item">
-                      <SongItem 
-                        song={song} 
-                        index={index} 
-                        onLikeUpdate={handleLikeUpdate} 
+                      <SongItem
+                        song={song}
+                        index={index}
+                        onLikeUpdate={handleLikeUpdate}
                         isPremium={true}
-                        albumCover={albumData.album.coverImage}
-                        albumTitle={albumData.album.title}
-                        playlist={songs}
+                        albumCover={album.coverImage}
+                        albumTitle={album.title}
+                        playlist={safeSongs}
                       />
                     </div>
                   ))}
@@ -167,4 +168,3 @@ const AlbumDetails = () => {
 };
 
 export default AlbumDetails;
-
