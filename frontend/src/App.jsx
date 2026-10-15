@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -8,7 +8,6 @@ import About from './pages/About';
 import Albums from './pages/Albums';
 import AlbumDetails from './pages/AlbumDetails';
 import SongDetails from './pages/SongDetails';
-import AdminPanel from './pages/AdminPanel';
 import Community from './pages/Community';
 
 import { PlayerProvider } from './context/PlayerContext';
@@ -28,7 +27,7 @@ function App() {
               <Route path="/albums/:id" element={<AlbumDetails />} />
               <Route path="/songs/:id" element={<SongDetails />} />
               <Route path="/community" element={<Community />} />
-              <Route path="/admin" element={<AdminPanel />} />
+              <Route path="/admin" element={<Navigate to="/albums" replace />} />
             </Routes>
           </main>
           <Footer />

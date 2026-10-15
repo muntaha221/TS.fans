@@ -40,10 +40,6 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
-
-            <Link to="/admin" className="px-5 py-2 rounded-full font-black text-sm bg-white/[0.06] border border-white/[0.08] text-white hover:bg-violet-600 hover:border-violet-500 transition-all shadow-lg hover:shadow-violet-500/20 transform hover:-translate-y-0.5">
-              Admin
-            </Link>
           </div>
 
           <div className="md:hidden flex items-center">
@@ -72,9 +68,6 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
-            <Link to="/admin" onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 rounded-xl text-base font-black bg-gradient-to-r from-violet-600 to-blue-600 text-white shadow-lg shadow-violet-500/20 text-center">
-              Admin Panel
-            </Link>
           </div>
         </div>
       )}
